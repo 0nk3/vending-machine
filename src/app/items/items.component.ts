@@ -14,7 +14,6 @@ export interface Trasaction {
   name?: string;
   price? : number;
 }
-
 const ITEMS_DATA: Items[] = [
   {position: 0, name: 'Jelly Beans', price: 3, remaining: 5},
   {position: 1, name: 'Fizz Pop', price: 1, remaining: 5},
@@ -44,7 +43,7 @@ export class ItemsComponent implements OnInit {
 
   dataSource = new MatTableDataSource<Items>(ITEMS_DATA);
   selection = new SelectionModel<Items>(true, []);
-  // are all items selected ?
+  //  all items currently selected 
   allSelectedItems(): boolean{
     const selectedItems = this.selection.selected.length;
     this.items = this.selection.selected
