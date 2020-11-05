@@ -48,7 +48,7 @@ export class ItemsComponent implements OnInit {
   allSelectedItems(): boolean{
     const selectedItems = this.selection.selected.length;
     this.items = this.selection.selected
-    this.totalCost = this.getTotalCost(this.items);
+    this.totalCost = this.getTotalCost();
     console.log("Selected:", this.selection.selected)
     console.log("Cost    :", this.totalCost)
     const numberOfRows = this.dataSource.data.length;
@@ -73,7 +73,7 @@ export class ItemsComponent implements OnInit {
   }
 
   // Total Cost of the Selected Items
-  getTotalCost(items: Trasaction[]): number{
+  getTotalCost(): number{
     return this.items.map(t => t.price).reduce((acc, value) => acc + value, 0) 
   }
   ngOnInit(): void {
