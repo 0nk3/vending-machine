@@ -2,18 +2,12 @@ import { element } from 'protractor';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { Trasaction } from './transactions';
+import { Items } from './Item';
 
 // Definition of an item
-export interface Items{
-  position?: number;
-  name?: string;
-  price? : number;
-  remaining?: number;
-}
-export interface Trasaction {
-  name?: string;
-  price? : number;
-}
+
+
 const ITEMS_DATA: Items[] = [
   {position: 0, name: 'Jelly Beans', price: 3, remaining: 5},
   {position: 1, name: 'Fizz Pop', price: 1, remaining: 5},

@@ -1,0 +1,11 @@
+.amount {
+  margin: 25px;
+  margin-bottom: 0px;
+}
+.buttons button {
+    margin: 0px 20px;
+    font-weight: bolder;
+}
+.buttons button:hover{
+  color: green
+}
