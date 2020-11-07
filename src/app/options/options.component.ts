@@ -1,3 +1,4 @@
+import { IProcessing } from './iprocessing';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -5,11 +6,18 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './options.component.html',
   styleUrls: ['./options.component.css']
 })
-export class OptionsComponent implements OnInit {
+export class OptionsComponent implements IProcessing {
 
-  constructor() { }
-
-  ngOnInit(): void {
+  getNote(): number {
+    throw new Error('Method not implemented.');
   }
-
+  validateNote(note: number): boolean {
+    throw new Error('Method not implemented.');
+  }
+  insertion(): boolean {
+    throw new Error('Method not implemented.');
+  }
+  dispenseItems(): void {
+    throw new Error('Method not implemented.');
+  }
 }
