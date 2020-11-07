@@ -19,7 +19,7 @@ export class OptionsComponent implements IProcessing, OnInit {
      { value: 1, viewValue: "R1"},
      { value: 2, viewValue: "R2"},
      { value: 5, viewValue: "R5"}
-   ]
+   ];
 
 
   getNote(): number {
