@@ -1,9 +1,9 @@
-.amount {
-  margin: 25px;
-  margin-bottom: 0px;
+.amount{
+  margin: 30px;
+  /* margin-bottom: 0px; */
 }
 .buttons button {
-    margin: 0px 20px;
+    margin: 30px 7px;
     font-weight: bolder;
 }
 .buttons button:hover{

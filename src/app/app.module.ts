@@ -1,3 +1,4 @@
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -10,13 +11,13 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
-import {MatCardModule} from '@angular/material/card';
 
 @NgModule({
   declarations: [
     AppComponent,
     ItemsComponent,
     OptionsComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -26,9 +27,8 @@ import {MatCardModule} from '@angular/material/card';
     MatSelectModule,
     MatInputModule,
     MatButtonModule,
-    MatCardModule,
-  
-  
+    FormsModule,
+    ReactiveFormsModule
 
   ],
   providers: [],

@@ -1,9 +1,29 @@
-<div class="amount">
-	<mat-form-field appearance="legacy">
-		<input matInput placeholder="Insert Note">
-    </mat-form-field>
-</div>
-<div class="buttons">
+<!-- <form class="" [formGroup]="options">
+    <div class="amount">
+            <mat-label>Note</mat-label>
+            <mat-select>
+                <mat-option value="1">R1</mat-option>
+                <mat-option value="2">R2</mat-option>
+                <mat-option value="3">R3</mat-option>
+            </mat-select>
+    </div>
+    <div class="buttons">
+        <button mat-raised-button >Insert</button>
+        <button mat-raised-button>Dispense</button>
+    </div>
+</form> -->
+<form class="amount" >
+<mat-form-field>
+    <mat-select placeholder="Pick Note" name="note">
+      <mat-option *ngFor="let note of notes" [value]="note.value">
+        {{note.viewValue}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div class="buttons">
     <button mat-raised-button >Insert</button>
     <button mat-raised-button>Dispense</button>
 </div>
+  </form>
+  
+  <p>Selected food = {{selectedNoteModel}}</p>
