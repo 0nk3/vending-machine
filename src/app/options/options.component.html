@@ -1,7 +1,7 @@
 <form class="amount" >
 <mat-form-field>
   <mat-label>Pick Coins</mat-label>
-    <mat-select [formControl]="coins" multiple (ngModelChange)="onCoinSelection()">
+    <mat-select [formControl]="coins" multiple (ngModelChange)="selectedCoins()">
       <mat-option *ngFor="let coin of coinList" [value]="coin" >
         {{coin}}
       </mat-option>
@@ -12,5 +12,3 @@
     <button mat-raised-button>Dispense</button>
 </div>
 </form>
-  
-<p>{{coins.value}}</p>
