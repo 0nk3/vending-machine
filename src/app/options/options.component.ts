@@ -11,9 +11,9 @@ export interface Note{
   templateUrl: './options.component.html',
   styleUrls: ['./options.component.css']
 })
-export class OptionsComponent implements IProcessing, OnInit {
+export class OptionsComponent implements IProcessing {
   selectedNote : number;
-  selectedNoteModel: string;
+
    notes: Note[] = [
      { value: 0, viewValue: "0 cents"},
      { value: 1, viewValue: "R1"},
@@ -34,8 +34,8 @@ export class OptionsComponent implements IProcessing, OnInit {
   dispenseItems(): void {
     throw new Error('Method not implemented.');
   }
-  ngOnInit(){
-    this.selectedNote = this.notes[0].value;
-    this.selectedNoteModel = this.notes[0].viewValue;
+  onNoteSelection(): number{
+    console.log("Inserted" + this.selectedNote)
+    return this.selectedNote;
   }
 }

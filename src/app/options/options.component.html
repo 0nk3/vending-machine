@@ -14,7 +14,7 @@
 </form> -->
 <form class="amount" >
 <mat-form-field>
-    <mat-select placeholder="Pick Note" name="note">
+    <mat-select placeholder="Pick Note" [(ngModel)]="selectedNote" (ngModelChange)="onNoteSelection()" name="notes">
       <mat-option *ngFor="let note of notes" [value]="note.value">
         {{note.viewValue}}
       </mat-option>
@@ -24,6 +24,6 @@
     <button mat-raised-button >Insert</button>
     <button mat-raised-button>Dispense</button>
 </div>
-  </form>
+</form>
   
-  <p>Selected food = {{selectedNoteModel}}</p>
+  <p>Selected food = {{selectedNote}}</p>
