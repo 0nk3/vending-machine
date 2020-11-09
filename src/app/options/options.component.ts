@@ -1,12 +1,10 @@
-import { element } from 'protractor';
+import {FormControl, FormGroupDirective, FormGroup, NgForm, Validators} from '@angular/forms';
 import { IProcessing } from './iprocessing';
 import { Component, OnInit } from '@angular/core';
-import { FormControl} from '@angular/forms';
 import { ItemsComponent } from '../items/items.component';
-export interface Note{
-  value: number;
-  viewValue: string;
-
+import { AcceptcoinsService } from '../acceptcoins.service';
+export interface Coin{
+  coin: number;
 }
 const items = new ItemsComponent();
 
@@ -15,19 +13,19 @@ const items = new ItemsComponent();
   templateUrl: './options.component.html',
   styleUrls: ['./options.component.css']
 })
-
 export class OptionsComponent implements IProcessing {
-  coins = new FormControl();
-  coinList: number[] = [0,1,2,5];
+
+  originalCoin: Coin = {
+    coin: 0
+  };
+
+
+  coinList: number[] = [1,2,5,10];
+  disabler = true;
 
   // compute the total cost of the selected items
   getCoins():number{
-    
-    let total = 0
-    this.coins.value.forEach(coin => {
-      total += coin;
-    });
-    console.log("get Coins : " + total)
+    const total = this.coin.coin
     return total;
   }
 
@@ -39,25 +37,43 @@ export class OptionsComponent implements IProcessing {
   computeChange(): number {
     if(items.getTotalCost() > this.getCoins()){
       console.log("Insuficient")
+      this.disabler = false;
       return this.getCoins() ; // insufficient funds
     }else if(items.getTotalCost()< this.getCoins()){
       console.log("There is chage")
+      this.disabler = true
       return this.getCoins() - items.getTotalCost() ; // change
     }else{
+      this.disabler = true;
       console.log("No Change")
       return 0; // no change
     }
   }
 
-  insertion(): boolean {
-    throw new Error('Method not implemented.');
+  insertCoin(coin : string): void {
+    coin = coin.trim()
+    console.log(coin)
+
   }
   dispenseItems(): void {
     throw new Error('Method not implemented.');
   }
-  // retrieve coins inserted
+  // retrieve coin inserted
   selectedCoins(): object{
-    console.log("Inserted : " + this.coins.value);
-    return this.coins.value;
+    console.log("Available Balance : " + this.getCoins());
+    return this.coin;
+  }
+  submitted = false;
+  coin: Coin = {...this.originalCoin};
+  constructor(private acceptService: AcceptcoinsService){}
+
+  onInsert(form: NgForm) {
+    this.submitted = true;
+    console.log(" Input<from options> : " + JSON.stringify(this.coin))
+    console.log('form valid ? : ', form.valid);
+    this.acceptService.accept(this.coin).subscribe(
+      (data) => console.log("Success", data),
+      (error) => console.log("Error", error)
+    );
   }
 }

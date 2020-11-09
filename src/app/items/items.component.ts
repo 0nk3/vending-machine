@@ -25,7 +25,6 @@ const ITEMS_DATA: Items[] = [
 export class ItemsComponent implements OnInit {
   totalCost = 0;
   cartTotal = new Set();  
-  balance: number;
   items: Trasaction[];
   displayedColumns: string[] = [
     "select",

@@ -1,14 +1,11 @@
-<form class="amount" >
-<mat-form-field>
-  <mat-label>Pick Coins</mat-label>
-    <mat-select [formControl]="coins" multiple (ngModelChange)="selectedCoins()">
-      <mat-option *ngFor="let coin of coinList" [value]="coin" >
-        {{coin}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+<form class="amount" #form="ngForm" *ngIf="!submitted" (ngSubmit)="onInsert(form)" novalidate autocomplete="off" >
   <div class="buttons">
-    <button mat-raised-button >Insert</button>
+    <mat-form-field>
+      <label>
+        <input matInput type="string" placeholder="Insert Coin" [(ngModel)]="coin.coin" #coin="ngModel" pattern="(1|2|5|10)" name="coin" required/>
+      </label>
+    </mat-form-field>
+    <button mat-raised-button type="submit" [disabled]="form.invalid">Insert</button>
     <button mat-raised-button>Dispense</button>
-</div>
+  </div>
 </form>
