@@ -6,12 +6,15 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	fmt.Println("Server started . . .")
 	router := gin.Default() // fail safe
+
+	router.Use(cors.Default())
 	router.POST("/accept", data)
 
 	router.Run()
