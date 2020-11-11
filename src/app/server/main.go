@@ -26,7 +26,7 @@ func data(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	log.Println("Data received : " + string(value))
+	log.Println("Data received : " + value)
 	c.JSON(http.StatusOK, gin.H{
 		"coin": string(value),
 	})

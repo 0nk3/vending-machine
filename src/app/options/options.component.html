@@ -2,10 +2,10 @@
   <div class="buttons">
     <mat-form-field>
       <label>
-        <input matInput type="string" placeholder="Insert Coin" [(ngModel)]="coin.coin" #coin="ngModel" pattern="(1|2|5|10)" name="coin" required/>
+        <input matInput #coin placeholder="Insert Coin" [(ngModel)]="coin.coin"  pattern="(1|2|5|10)" name="coin" required/>
       </label>
     </mat-form-field>
-    <button mat-raised-button type="submit" [disabled]="form.invalid">Insert</button>
+    <button mat-raised-button #coin (click)="onInsert(coin.value)" [disabled]="form.invalid">Insert</button>
     <button mat-raised-button>Dispense</button>
   </div>
 </form>

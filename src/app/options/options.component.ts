@@ -50,16 +50,14 @@ export class OptionsComponent implements IProcessing {
     }
   }
 
-  insertCoin(coin : string): void {
-    coin = coin.trim()
+  insertCoin(coin : number): void {
     console.log(coin)
-
   }
   dispenseItems(): void {
     throw new Error('Method not implemented.');
   }
   // retrieve coin inserted
-  selectedCoins(): object{
+  selectedCoins(){
     console.log("Available Balance : " + this.getCoins());
     return this.coin;
   }
@@ -67,13 +65,15 @@ export class OptionsComponent implements IProcessing {
   coin: Coin = {...this.originalCoin};
   constructor(private acceptService: AcceptcoinsService){}
 
-  onInsert(form: NgForm) {
+  onInsert(coin : Coin) {
+    this.coin = coin;
     this.submitted = true;
     console.log(" Input<from options> : " + JSON.stringify(this.coin))
-    console.log('form valid ? : ', form.valid);
+    // console.log('form valid ? : ', form.valid);
     this.acceptService.accept(this.coin).subscribe(
       (data) => console.log("Success", data),
       (error) => console.log("Error", error)
     );
+  
   }
 }
