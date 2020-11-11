@@ -22,7 +22,7 @@ type Item struct {
 
 func main() {
 	fmt.Println("Server started . . .")
-	// db()
+	db()
 	router := gin.Default() // fail safe
 
 	router.Use(cors.Default())
@@ -65,7 +65,7 @@ func db() {
 		if error != nil {
 			panic(error)
 		}
-		items = append(items, item)
+		log.Println(item.Position, item.Name, item.Price, item.Remaining)
 	}
 
 }
