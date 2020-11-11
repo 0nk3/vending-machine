@@ -20,9 +20,11 @@ type Item struct {
 	Remaining int
 }
 
+var database *sql.DB
+
 func main() {
 	fmt.Println("Server started . . .")
-	db()
+	DataBase()
 	router := gin.Default() // fail safe
 
 	router.Use(cors.Default())
@@ -38,15 +40,15 @@ func data(c *gin.Context) {
 		fmt.Println(err.Error())
 	}
 	log.Println("Data received : " + string(value))
-
 	c.JSON(http.StatusOK, gin.H{
 		"coin": string(value),
 	})
 }
 
-func db() {
+// DataBase . .
+func DataBase() {
 	fmt.Println("<================ MyPostGres database ==============>")
-	database, error := sql.Open("postgres", "postgres://onke:onke10222@localhost/vending_machine?sslmode=disable") // doesnt necessarily check connection, so it bettter to ping
+	database, error := sql.Open("postgres", "postgres://onke:onke10222@localhost/vending_machine?sslmode=disable")
 	if error = database.Ping(); error != nil {
 		panic(error)
 	}
@@ -58,7 +60,6 @@ func db() {
 	}
 	defer rows.Close()
 	// iterate throught the results
-
 	for rows.Next() {
 		item := Item{}
 		error := rows.Scan(&item.Position, &item.Name, &item.Price, &item.Remaining) // order matters
@@ -67,5 +68,4 @@ func db() {
 		}
 		log.Println(item.Position, item.Name, item.Price, item.Remaining)
 	}
-
 }
