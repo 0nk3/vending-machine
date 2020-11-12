@@ -69,9 +69,9 @@ func DataBase(c *gin.Context) {
 		}
 		c.JSON(http.StatusOK, gin.H{
 			"position":  &item.Position,
-			"available": &item.Remaining,
 			"name":      &item.Name,
 			"price":     &item.Price,
+			"available": &item.Remaining,
 		})
 		log.Println(item.Position, item.Name, item.Price, item.Remaining)
 	}
