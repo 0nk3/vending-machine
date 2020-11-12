@@ -1,3 +1,4 @@
+import { ItemsService } from './items.service';
 import { Items } from './items/Item';
 import { Coin } from './options/options.component';
 import { Injectable } from '@angular/core';
@@ -21,20 +22,33 @@ export class AcceptcoinsService {
   changeMessage(coin: Coin) {
     this.coinSource.next(coin)
   }
+
+  constructor(private http: HttpClient, private itemsService: ItemsService) { }
   
-  /// =========
-  constructor(private http: HttpClient) { }
+  getItems(): Observable<Items[]>{
+    console.log("Ca")
+    return this.http.get<Items>(this.URL + '/items' ).pipe(
+      tap((newItem: Items) => console.log(`items fetched : ${newItem}`)),
+      catchError(this.handleError<any>('get items'))
+    )
+  }
 
   accept(coin : Coin): Observable<Coin>{
     this.coinSource.next(coin)
-    this.TOTAL += +
-    this.insert(+coin)
+    this.TOTAL += +coin
+  
     console.log("Vending Machine Total : " + this.TOTAL)
     console.log("Coin<from service> ===> " + JSON.stringify(coin))
     return this.http.post<Coin>(this.URL + '/accept', coin, this.httpOptions).pipe(
       tap((newCoin: Coin)=> console.log(`inserted coin ${coin}`)),
       catchError(this.handleError<Coin>())
     )
+  }
+  addItem(item: Items): Observable<Items>{
+    return this.http.post<Items>(this.URL + '/items', item, this.httpOptions).pipe(
+      tap((newItem: Items) => this.log(newItem)),
+      catchError(this.handleError<any>('add item'))
+    );
   }
   // Reduce stock after sale
   updateStock(item: Items):Observable<any>{
@@ -58,14 +72,11 @@ export class AcceptcoinsService {
       return of(result as T);
     };
   }
+  private log(item: Items){
+    this.itemsService.add(item)
+  }
+
 
   /// message service for data sharing
-  coins: number[] = []
 
-  insert(coin: number){
-    this.coins.push(coin)
-  }
-  clear() {
-    this.coins = [];
-  }
 }

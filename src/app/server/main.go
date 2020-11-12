@@ -71,9 +71,8 @@ func DataBase(c *gin.Context) {
 			"position":  &item.Position,
 			"name":      &item.Name,
 			"price":     &item.Price,
-			"available": &item.Remaining,
+			"remaining": &item.Remaining,
 		})
 		log.Println(item.Position, item.Name, item.Price, item.Remaining)
 	}
-
 }

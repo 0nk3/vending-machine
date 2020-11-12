@@ -1,4 +1,4 @@
-import { element } from 'protractor';
+
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
@@ -10,21 +10,24 @@ import { AcceptcoinsService } from '../acceptcoins.service';
 // Definition of an item
 
 
-const ITEMS_DATA: Items[] = [
-  {position: 1, name: 'Jelly Beans', price: 3, remaining: 5},
-  {position: 2, name: 'Coca Cola', price: 10, remaining: 5},
-  {position: 3, name: 'Bar One', price: 8, remaining: 5},
-  {position: 4, name: 'Fanta Orange', price: 10, remaining: 5},
-  {position: 5, name: 'Nik Naks', price: 7, remaining: 5},
-  {position: 6, name: 'Pop Shots', price: 4, remaining: 5},
 
-];
 @Component({
   selector: 'app-items',
   templateUrl: './items.component.html',
   styleUrls: ['./items.component.css']
 })
 export class ItemsComponent implements OnInit {
+
+  ITEMS_DATA: Items[] ;
+  dataSource: MatTableDataSource<Items>;
+  constructor(private acceptcoinsService: AcceptcoinsService){}
+  // {position: 1, name: 'Jelly Beans', price: 3, remaining: 5},
+  // {position: 2, name: 'Coca Cola', price: 10, remaining: 5},
+  // {position: 3, name: 'Bar One', price: 8, remaining: 5},
+  // {position: 4, name: 'Fanta Orange', price: 10, remaining: 5},
+  // {position: 5, name: 'Nik Naks', price: 7, remaining: 5},
+  // {position: 6, name: 'Pop Shots', price: 4, remaining: 5},
+
   totalCost = 0;
   coin: Coin;
   cartTotal = new Set();  
@@ -36,9 +39,26 @@ export class ItemsComponent implements OnInit {
     "price",
     "remaining"
   ];
-  constructor(private acceptcoinsService: AcceptcoinsService){}
+  //dataSource: MatTableDataSource<Items>
 
-  dataSource = new MatTableDataSource<Items>(ITEMS_DATA);
+  ngOnInit(): void {
+    this.getItems();
+    
+  }
+  getItems():void{
+    this.acceptcoinsService.getItems().subscribe((item) => (this.ITEMS_DATA = item));
+    this.dataSource = new MatTableDataSource<Items>(this.ITEMS_DATA);
+  }
+  add(item: Items):void{
+    item =item;
+    if(!item){
+      return;
+    }
+    this.acceptcoinsService.addItem({item} as Items).subscribe((item)=> {
+      this.ITEMS_DATA.push(item)
+    })
+  }
+ 
   selection = new SelectionModel<Items>(true, []);
   //  all items currently selected 
   allSelectedItems(): boolean{
@@ -73,7 +93,5 @@ export class ItemsComponent implements OnInit {
     return this.items.map(t => t.price).reduce((acc, value) => acc + value, 0) 
   }
 
-  ngOnInit(): void {
-  
-  }
+
 }

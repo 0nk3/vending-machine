@@ -1,19 +1,18 @@
 
-import { IProcessing } from './iprocessing';
 import { Component, OnInit } from '@angular/core';
-import { ItemsComponent } from '../items/items.component';
 import { AcceptcoinsService } from '../acceptcoins.service';
+
+
+
 export interface Coin{
   coin: number;
 }
-
-
 @Component({
   selector: 'app-options',
   templateUrl: './options.component.html',
   styleUrls: ['./options.component.css']
 })
-export class OptionsComponent  {
+export class OptionsComponent implements OnInit{
 
   originalCoin: Coin = {
     coin: 0
@@ -63,8 +62,8 @@ export class OptionsComponent  {
     );
   }
   ///try out behav
-  // ngOnInit(): void {
-  //   this.acceptService.currentCoin.subscribe( coin => this.coin = coin)
+  ngOnInit(): void {
+    // this.acceptService.currentCoin.subscribe( coin => this.coin = coin)
     
-  // }
+  }
 }
