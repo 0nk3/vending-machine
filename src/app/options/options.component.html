@@ -1,11 +1,14 @@
-<form class="amount" #form="ngForm" *ngIf="!submitted" (ngSubmit)="onInsert(form)" novalidate autocomplete="off" >
+<form class="amount" #form="ngForm" novalidate autocomplete="off" >
   <div class="buttons">
     <mat-form-field>
       <label>
-        <input matInput #coin placeholder="Insert Coin" [(ngModel)]="coin.coin"  pattern="(1|2|5|10)" name="coin" required/>
+        <input matInput #coin placeholder="Insert Coin"  pattern="(1|2|5|10)" name="coin" required/>
       </label>
     </mat-form-field>
-    <button mat-raised-button #coin (click)="onInsert(coin.value)" [disabled]="form.invalid">Insert</button>
-    <button mat-raised-button>Dispense</button>
+    <button mat-raised-button #coin (click)="onInsert(coin.value); coin.value=''" [disabled]="submitted">Insert</button>
+    <button mat-raised-button  [disabled]="!submitted">Dispense</button>
   </div>
 </form>
+<div>
+  {{}}
+</div>

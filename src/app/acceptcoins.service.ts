@@ -1,7 +1,8 @@
+import { Items } from './items/Item';
 import { Coin } from './options/options.component';
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http'
-import { Observable, of } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 @Injectable({
@@ -9,16 +10,38 @@ import { catchError, tap } from 'rxjs/operators';
 })
 export class AcceptcoinsService {
   URL = 'http://localhost:8080';
+  TOTAL = 0;
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
+
+  // try out behavi
+  private coinSource = new BehaviorSubject({"coin": 0});
+  currentCoin = this.coinSource.asObservable();
+  changeMessage(coin: Coin) {
+    this.coinSource.next(coin)
+  }
+  
+  /// =========
   constructor(private http: HttpClient) { }
 
   accept(coin : Coin): Observable<Coin>{
-    console.log("Data ===> " + JSON.stringify(coin))
+    this.coinSource.next(coin)
+    this.TOTAL += +
+    this.insert(+coin)
+    console.log("Vending Machine Total : " + this.TOTAL)
+    console.log("Coin<from service> ===> " + JSON.stringify(coin))
     return this.http.post<Coin>(this.URL + '/accept', coin, this.httpOptions).pipe(
       tap((newCoin: Coin)=> console.log(`inserted coin ${coin}`)),
       catchError(this.handleError<Coin>())
+    )
+  }
+  // Reduce stock after sale
+  updateStock(item: Items):Observable<any>{
+    return this.http.put<Items>(this.URL + 'update', this.httpOptions).pipe(
+      tap((_) => item.price = item.price -1),
+      catchError(this.handleError<any>('updateStock'))
+
     )
   }
 
@@ -35,12 +58,14 @@ export class AcceptcoinsService {
       return of(result as T);
     };
   }
-  coins: number[] = [];
-  insert(coin: number) {
-    this.coins.push(coin);
+
+  /// message service for data sharing
+  coins: number[] = []
+
+  insert(coin: number){
+    this.coins.push(coin)
   }
   clear() {
     this.coins = [];
   }
-
 }

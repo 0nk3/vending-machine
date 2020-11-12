@@ -4,18 +4,20 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Trasaction } from './transactions';
 import { Items } from './Item';
+import { Coin } from '../options/options.component';
+import { AcceptcoinsService } from '../acceptcoins.service';
 
 // Definition of an item
 
 
 const ITEMS_DATA: Items[] = [
-  {position: 0, name: 'Jelly Beans', price: 3, remaining: 5},
-  {position: 1, name: 'Fizz Pop', price: 1, remaining: 5},
-  {position: 2, name: 'Coke', price: 10, remaining: 5},
+  {position: 1, name: 'Jelly Beans', price: 3, remaining: 5},
+  {position: 2, name: 'Coca Cola', price: 10, remaining: 5},
   {position: 3, name: 'Bar One', price: 8, remaining: 5},
-  {position: 4, name: 'Fanta', price: 10, remaining: 5},
-  {position: 5, name: 'Pop Shots', price: 7, remaining: 5},
-  {position: 6, name: 'Nik Naks', price: 7, remaining: 5},
+  {position: 4, name: 'Fanta Orange', price: 10, remaining: 5},
+  {position: 5, name: 'Nik Naks', price: 7, remaining: 5},
+  {position: 6, name: 'Pop Shots', price: 4, remaining: 5},
+
 ];
 @Component({
   selector: 'app-items',
@@ -24,6 +26,7 @@ const ITEMS_DATA: Items[] = [
 })
 export class ItemsComponent implements OnInit {
   totalCost = 0;
+  coin: Coin;
   cartTotal = new Set();  
   items: Trasaction[];
   displayedColumns: string[] = [
@@ -33,6 +36,7 @@ export class ItemsComponent implements OnInit {
     "price",
     "remaining"
   ];
+  constructor(private acceptcoinsService: AcceptcoinsService){}
 
   dataSource = new MatTableDataSource<Items>(ITEMS_DATA);
   selection = new SelectionModel<Items>(true, []);
@@ -44,7 +48,7 @@ export class ItemsComponent implements OnInit {
     console.log("Selected:", this.selection.selected)
     console.log("Cost    :", this.totalCost)
     const numberOfRows = this.dataSource.data.length;
-    
+  
     return selectedItems === numberOfRows;
   }
 
@@ -68,6 +72,8 @@ export class ItemsComponent implements OnInit {
   getTotalCost(): number{
     return this.items.map(t => t.price).reduce((acc, value) => acc + value, 0) 
   }
+
   ngOnInit(): void {
+  
   }
 }
