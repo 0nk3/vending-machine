@@ -2,8 +2,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AcceptcoinsService } from '../acceptcoins.service';
 
-
-
 export interface Coin{
   coin: number;
 }

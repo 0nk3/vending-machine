@@ -16,7 +16,7 @@ export class AcceptcoinsService {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
 
-  // try out behavi
+  // try out behavior
   private coinSource = new BehaviorSubject({"coin": 0});
   currentCoin = this.coinSource.asObservable();
   changeMessage(coin: Coin) {
@@ -24,12 +24,11 @@ export class AcceptcoinsService {
   }
 
   constructor(private http: HttpClient, private itemsService: ItemsService) { }
-  
+  // GET vendin machine items from the DB
   getItems(): Observable<Items[]>{
-    console.log("Ca")
-    return this.http.get<Items>(this.URL + '/items' ).pipe(
-      tap((newItem: Items) => console.log(`items fetched : ${newItem}`)),
-      catchError(this.handleError<any>('get items'))
+    return this.http.get<Items[]>(this.URL + '/items').pipe(
+      tap((data) => console.log('items fetched ' + JSON.stringify(data))),
+      catchError(this.handleError<Items[]>('get items', []))
     )
   }
 
@@ -44,16 +43,16 @@ export class AcceptcoinsService {
       catchError(this.handleError<Coin>())
     )
   }
-  addItem(item: Items): Observable<Items>{
-    return this.http.post<Items>(this.URL + '/items', item, this.httpOptions).pipe(
-      tap((newItem: Items) => this.log(newItem)),
-      catchError(this.handleError<any>('add item'))
-    );
-  }
-  // Reduce stock after sale
+  // addItem(item: Items): Observable<Items>{
+  //   return this.http.post<Items>(this.URL + '/items', item, this.httpOptions).pipe(
+  //     tap((newItem: Items) => this.log(newItem)),
+  //     catchError(this.handleError<any>('add item'))
+  //   );
+  // }
+  // TODO Reduce stock items after sale
   updateStock(item: Items):Observable<any>{
-    return this.http.put<Items>(this.URL + 'update', this.httpOptions).pipe(
-      tap((_) => item.price = item.price -1),
+    return this.http.put<Items>(this.URL + '/update', this.httpOptions).pipe(
+      tap((item) => item.remaining = item.remaining -1),
       catchError(this.handleError<any>('updateStock'))
 
     )
@@ -65,7 +64,7 @@ export class AcceptcoinsService {
    * @param operation - name of the operation that failed
    * @param result - optional value to return as the observable result
    */
-  private handleError<T>(result?: T) {
+  private handleError<T>(operation = 'operation' ,result?: T) {
     return (error: any): Observable<T> => {
       console.error(error); 
       // Let the app keep running by returning an empty result.
@@ -75,8 +74,5 @@ export class AcceptcoinsService {
   private log(item: Items){
     this.itemsService.add(item)
   }
-
-
-  /// message service for data sharing
 
 }

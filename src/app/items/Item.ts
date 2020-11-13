@@ -1,7 +1,7 @@
 // Definition of an item
 export interface Items{
-    position?: number;
-    name?: string;
-    price? : number;
-    remaining?: number;
+    position: number;
+    name: string;
+    price : number;
+    remaining: number;
   }

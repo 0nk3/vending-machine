@@ -61,18 +61,18 @@ func DataBase(c *gin.Context) {
 	}
 	defer rows.Close()
 	// iterate throught the results
+	i := make([]Item, 0)
 	for rows.Next() {
 		item := Item{}
+
 		error := rows.Scan(&item.Position, &item.Name, &item.Price, &item.Remaining) // order matters
 		if error != nil {
 			panic(error)
 		}
-		c.JSON(http.StatusOK, gin.H{
-			"position":  &item.Position,
-			"name":      &item.Name,
-			"price":     &item.Price,
-			"remaining": &item.Remaining,
-		})
+		i = append(i, item)
+
 		log.Println(item.Position, item.Name, item.Price, item.Remaining)
 	}
+	c.JSON(http.StatusOK, i)
+	fmt.Println(i)
 }
