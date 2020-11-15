@@ -4,7 +4,7 @@ import { Coin } from './options/options.component';
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http'
 import { Observable, of, BehaviorSubject } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -17,23 +17,16 @@ export class AcceptcoinsService {
   };
 
   // try out behavior
-  private coinSource = new BehaviorSubject({"coin": 0});
-  currentCoin = this.coinSource.asObservable();
-  changeMessage(coin: Coin) {
-    this.coinSource.next(coin)
-  }
-
-  constructor(private http: HttpClient, private itemsService: ItemsService) { }
-  // GET vendin machine items from the DB
-  getItems(): Observable<Items[]>{
-    return this.http.get<Items[]>(this.URL + '/items').pipe(
-      tap((data) => console.log('items fetched ' + JSON.stringify(data))),
-      catchError(this.handleError<Items[]>('get items', []))
-    )
-  }
+  // private coinSource = new BehaviorSubject({"coin": 0});
+  // currentCoin = this.coinSource.asObservable();
+  // changeMessage(coin: Coin) {
+  //   this.coinSource.next(coin)
+  // }
+  constructor(private http: HttpClient) { }
+  
 
   accept(coin : Coin): Observable<Coin>{
-    this.coinSource.next(coin)
+    // this.coinSource.next(coin)
     this.TOTAL += +coin
   
     console.log("Vending Machine Total : " + this.TOTAL)
@@ -43,12 +36,13 @@ export class AcceptcoinsService {
       catchError(this.handleError<Coin>())
     )
   }
-  // addItem(item: Items): Observable<Items>{
-  //   return this.http.post<Items>(this.URL + '/items', item, this.httpOptions).pipe(
-  //     tap((newItem: Items) => this.log(newItem)),
-  //     catchError(this.handleError<any>('add item'))
-  //   );
-  // }
+  // GET items data from the server 
+  getItems(): Observable<Items[]>{
+    return this.http.get<Items[]>(this.URL + '/items').pipe(
+      tap((d) => console.log("Data  Received <acceptcoin service> : \n" + JSON.stringify(d))),
+      catchError(this.handleError<Items[]>('get items', []))
+    )
+  }
   // TODO Reduce stock items after sale
   updateStock(item: Items):Observable<any>{
     return this.http.put<Items>(this.URL + '/update', this.httpOptions).pipe(
@@ -57,6 +51,27 @@ export class AcceptcoinsService {
 
     )
   }
+    // GET vending machine item by id. Return `undefined` when id is not found 
+    getHeroNo404<Data>(id: number): Observable<Items> {
+      const url = `${this.URL}/?id=${id}`;
+      return this.http.get<Items[]>(url).pipe(
+        map((items) => items[0]), // returns a {0|1} element array
+        tap((h) => {
+          const outcome = h ? `fetched` : `did not find`;
+          console.log(`${outcome} item id=${id}`);
+        }),
+        catchError(this.handleError<Items>(`getItem id=${id}`))
+      );
+    }
+  
+    // GET veding machine item by id. Will 404 if id is not found 
+    getItem(id: number): Observable<Items> {
+      const url = `${this.URL}/${id}`;
+      return this.http.get<Items>(url).pipe(
+        tap((_) => console.log(`fetched item id=${id}`)),
+        catchError(this.handleError<Items>(`getItem id=${id}`))
+      );
+    }
 
    /**
    * Handle Http operation that failed.
@@ -71,8 +86,8 @@ export class AcceptcoinsService {
       return of(result as T);
     };
   }
-  private log(item: Items){
-    this.itemsService.add(item)
-  }
+  // private log(item: Items){
+  //   this.itemsService.add(item)
+  // }
 
 }

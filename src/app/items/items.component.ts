@@ -5,11 +5,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Transaction } from './transactions';
 import { Items } from './Item';
+import {ChangeDetectorRef} from '@angular/core'
 import { Coin } from '../options/options.component';
 import { AcceptcoinsService } from '../acceptcoins.service';
-
-// Definition of an item
-
 
 
 @Component({
@@ -18,24 +16,13 @@ import { AcceptcoinsService } from '../acceptcoins.service';
   styleUrls: ['./items.component.css']
 })
 export class ItemsComponent implements OnInit {
-
-  ITEMS_DATA: Items[];
-  // = [ 
-  //  {position: 1, name: 'Jelly Beans', price: 3, remaining: 5},
-  //  {position: 2, name: 'Coca Cola', price: 10, remaining: 5},
-  //  {position: 3, name: 'Bar One', price: 8, remaining: 5},
-  //  {position: 4, name: 'Fanta Orange', price: 10, remaining: 5},
-  //  {position: 5, name: 'Nik Naks', price: 7, remaining: 5},
-  //  {position: 6, name: 'Pop Shots', price: 4, remaining: 5},
-  // ];
   
   stock = 0;
-  constructor(private acceptcoinsService: AcceptcoinsService){ }
-
   totalCost = 0;
   coin: Coin;
   cartTotal = new Set();  
   items: Transaction[];
+  ITEMS_DATA: Items[]
   displayedColumns: string[] = [
     "select",
     "position",
@@ -45,24 +32,25 @@ export class ItemsComponent implements OnInit {
   ];
   dataSource: MatTableDataSource<Items>;
 
+
+  constructor(private ref : ChangeDetectorRef, private acceptcoinsService: AcceptcoinsService){ }
+  
+
+
   ngOnInit(): void {
-    this.acceptcoinsService.getItems().subscribe((item) => (this.ITEMS_DATA = item));
-    this.dataSource = new MatTableDataSource(this.ITEMS_DATA)
-    console.log("Data On Init : \n" + this.ITEMS_DATA)
+    console.log("ngOnInit")
+    this.getItems()
+    //========
+    this.acceptcoinsService.getItems().subscribe( item => this.dataSource.data = item);
+    this.dataSource = new MatTableDataSource<Items>(this.ITEMS_DATA)
+    // console.log("Data " +this.ITEMS_DATA)
+    this.ref.detectChanges()
+    
+
   }
   getItems():void{
-    
-    // this.dataSource = new MatTableDataSource<Items>(this.ITEMS_DATA);
-    console.log("Data On Init : \n" + this.ITEMS_DATA)
+    this.acceptcoinsService.getItems().subscribe((items) => (this.ITEMS_DATA = items))
   }
-  // add(item: Items):void{
-  //   if(!item){
-  //     return;
-  //   }
-  //   this.acceptcoinsService.addItem(item  as Items).subscribe((item)=> {
-  //     this.ITEMS_DATA.push(item)
-  //   })
-  // }
 
   selection = new SelectionModel<Items>(true, []);
   //  all items currently selected 
@@ -72,7 +60,7 @@ export class ItemsComponent implements OnInit {
     this.totalCost = this.getTotalCost();
   
     console.log("Selected:", this.selection.selected)
-    console.log("Cost    :", this.totalCost)
+   // console.log("Cost    :", this.totalCost)
     const numberOfRows = this.dataSource.data.length;
   
     return selectedItems === numberOfRows;
