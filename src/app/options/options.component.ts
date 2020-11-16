@@ -15,12 +15,11 @@ export class OptionsComponent implements OnInit{
   originalCoin: Coin = {
     coin: 0
   };
-  constructor(private acceptService: AcceptcoinsService){}
+  constructor(private acceptService: AcceptcoinsService, ){}
  
   
 
   coinList: number[] = [1,2,5,10];
-  disabler = true;
 
   // compute the total cost of the selected items
   getCoins(coin : Coin):number{
@@ -34,7 +33,7 @@ export class OptionsComponent implements OnInit{
    * Money shortage
    */
   dispenseItems(): void {
-    throw new Error('Method not implemented.');
+    
   }
 
   submitted = false;
@@ -53,15 +52,12 @@ export class OptionsComponent implements OnInit{
     });
     this.submitted = true;
     console.log(" Input<from options> : " + this.coin)
-
     this.acceptService.accept(coin as Coin).subscribe(
       (data) => console.log("Success", data),
       (error) => console.log("Error", error)
     );
-  }
-  ///try out behav
-  ngOnInit(): void {
-    // this.acceptService.currentCoin.subscribe( coin => this.coin = coin)
     
   }
+  ///try out behav
+  ngOnInit(): void {} 
 }

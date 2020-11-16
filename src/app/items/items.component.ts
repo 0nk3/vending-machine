@@ -32,36 +32,24 @@ export class ItemsComponent implements OnInit {
   ];
   dataSource: MatTableDataSource<Items>;
 
-
   constructor(private ref : ChangeDetectorRef, private acceptcoinsService: AcceptcoinsService){ }
-  
-
 
   ngOnInit(): void {
-    console.log("ngOnInit")
-    this.getItems()
-    //========
     this.acceptcoinsService.getItems().subscribe( item => this.dataSource.data = item);
     this.dataSource = new MatTableDataSource<Items>(this.ITEMS_DATA)
-    // console.log("Data " +this.ITEMS_DATA)
     this.ref.detectChanges()
-    
-
-  }
-  getItems():void{
-    this.acceptcoinsService.getItems().subscribe((items) => (this.ITEMS_DATA = items))
   }
 
+    //  all items currently selected 
   selection = new SelectionModel<Items>(true, []);
-  //  all items currently selected 
   allSelectedItems(): boolean{
     const selectedItems = this.selection.selected.length;
     this.items = this.selection.selected
-    this.totalCost = this.getTotalCost();
-  
-    console.log("Selected:", this.selection.selected)
+    this.getTotalCost();
+    console.log("Selected : ", this.selection.selected)
    // console.log("Cost    :", this.totalCost)
     const numberOfRows = this.dataSource.data.length;
+    // this.getTotalItems(this.selection.selected.price)
   
     return selectedItems === numberOfRows;
   }
@@ -78,17 +66,21 @@ export class ItemsComponent implements OnInit {
     if(!row){
       return `${this.allSelectedItems()? 'select': 'deselect'} all`;
     }else{
+      // console.log("row.position +1 :" + row)
       return `${this.selection.isSelected(row)? 'deselect': 'select'} row ${row.position + 1}`;
     }
   }
   // Total Cost of the Selected Items
-  getTotalCost(): number{
-    return this.items.map(t => t.price).reduce((acc, value) => acc + value, 0) 
-  }
-  // TODO : Logic for each item on click
+  getTotalCost():void {
+    this.items.forEach( (t)=> {
+      console.log(t.Price)
+      this.totalCost += t.Price;
+      console.log(t)
+    })
   
-  getTotalItems(): number{
-    return this.stock
+  }
+  getTotalItems(pos: number): void{
+    this.acceptcoinsService.updateStock(pos)
   }
 
 }

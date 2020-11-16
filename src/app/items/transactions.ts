@@ -1,6 +1,6 @@
 // Definition of a trasaction
 export interface Transaction {
-    name?: string;
-    price? : number;
+    Name?: string;
+    Price? : number;
     remaining: number;
   }

@@ -16,12 +16,6 @@ export class AcceptcoinsService {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
 
-  // try out behavior
-  // private coinSource = new BehaviorSubject({"coin": 0});
-  // currentCoin = this.coinSource.asObservable();
-  // changeMessage(coin: Coin) {
-  //   this.coinSource.next(coin)
-  // }
   constructor(private http: HttpClient) { }
   
 
@@ -30,7 +24,7 @@ export class AcceptcoinsService {
     this.TOTAL += +coin
   
     console.log("Vending Machine Total : " + this.TOTAL)
-    console.log("Coin<from service> ===> " + JSON.stringify(coin))
+    console.log("Coin : " + JSON.stringify(coin))
     return this.http.post<Coin>(this.URL + '/accept', coin, this.httpOptions).pipe(
       tap((newCoin: Coin)=> console.log(`inserted coin ${coin}`)),
       catchError(this.handleError<Coin>())
@@ -39,17 +33,17 @@ export class AcceptcoinsService {
   // GET items data from the server 
   getItems(): Observable<Items[]>{
     return this.http.get<Items[]>(this.URL + '/items').pipe(
-      tap((d) => console.log("Data  Received <acceptcoin service> : \n" + JSON.stringify(d))),
+      tap((d) => console.log("Data  Received : \n" + JSON.stringify(d))),
       catchError(this.handleError<Items[]>('get items', []))
     )
   }
   // TODO Reduce stock items after sale
-  updateStock(item: Items):Observable<any>{
-    return this.http.put<Items>(this.URL + '/update', this.httpOptions).pipe(
-      tap((item) => item.remaining = item.remaining -1),
+  updateStock(position: number):Observable<Items>{
+    return this.http.put<Items>(`${this.URL}/update/${position}`, this.httpOptions).pipe(
+      tap((_) => console.log("items sold and updaated")),
       catchError(this.handleError<any>('updateStock'))
 
-    )
+    );
   }
     // GET vending machine item by id. Return `undefined` when id is not found 
     getHeroNo404<Data>(id: number): Observable<Items> {
