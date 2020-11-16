@@ -1,5 +1,3 @@
-import { element } from 'protractor';
-
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
@@ -18,11 +16,13 @@ import { AcceptcoinsService } from '../acceptcoins.service';
 export class ItemsComponent implements OnInit {
   
   stock = 0;
+  change = 0
   totalCost = 0;
   coin: Coin;
   cartTotal = new Set();  
   items: Transaction[];
   ITEMS_DATA: Items[]
+  dataSource  = new MatTableDataSource();
   displayedColumns: string[] = [
     "select",
     "position",
@@ -30,35 +30,33 @@ export class ItemsComponent implements OnInit {
     "price",
     "remaining"
   ];
-  dataSource: MatTableDataSource<Items>;
+ 
 
-  constructor(private ref : ChangeDetectorRef, private acceptcoinsService: AcceptcoinsService){ }
-
+  constructor(
+    private ref : ChangeDetectorRef, private acceptcoinsService: AcceptcoinsService
+    ){ }
+    // Retrive Data From the server
   ngOnInit(): void {
-    this.acceptcoinsService.getItems().subscribe( item => this.dataSource.data = item);
-    this.dataSource = new MatTableDataSource<Items>(this.ITEMS_DATA)
-    this.ref.detectChanges()
+    this.acceptcoinsService.getItems().subscribe(item => {
+      this.dataSource.data = item
+    })
+
   }
 
-    //  all items currently selected 
+    // all items currently selected 
   selection = new SelectionModel<Items>(true, []);
   allSelectedItems(): boolean{
     const selectedItems = this.selection.selected.length;
-    this.items = this.selection.selected
-    this.getTotalCost();
     console.log("Selected : ", this.selection.selected)
-   // console.log("Cost    :", this.totalCost)
     const numberOfRows = this.dataSource.data.length;
-    // this.getTotalItems(this.selection.selected.price)
   
     return selectedItems === numberOfRows;
   }
 
-  // Select all rows if they are not all selected; otherwise
-  masterToggle(){
+  //Select all rows if they are not all selected; otherwise
+  masterToggle(row? : any){
     this.allSelectedItems()?
-    this.selection.clear(): this.dataSource.data.forEach(
-      row => this.selection.select(row));
+    this.selection.clear(): this.dataSource.data.forEach(() => this.selection.select())
   }
 
   // Label for the checkbox on the passed row
@@ -66,21 +64,27 @@ export class ItemsComponent implements OnInit {
     if(!row){
       return `${this.allSelectedItems()? 'select': 'deselect'} all`;
     }else{
-      // console.log("row.position +1 :" + row)
-      return `${this.selection.isSelected(row)? 'deselect': 'select'} row ${row.position + 1}`;
+  
+      return `${this.selection.isSelected(row)? 'deselect': 'select'} row ${row.Position + 1}`;
     }
   }
   // Total Cost of the Selected Items
-  getTotalCost():void {
-    this.items.forEach( (t)=> {
-      console.log(t.Price)
-      this.totalCost += t.Price;
-      console.log(t)
-    })
-  
+  getTotalCost():number {
+    return this.items.map( t => t.Price).reduce((total, price) => total + price, 0)
   }
-  getTotalItems(pos: number): void{
-    this.acceptcoinsService.updateStock(pos)
+  // Compute change
+  checkOut(): number{
+    this.selection.selected.map(p => {
+      if(p.Price > this.coin.coin){
+        this.change = this.coin.coin  // insufficient funds, return money back
+      }else{
+        this.change =  this.coin.coin - p.Price
+      }
+    })
+    return this.change;
+  }
+  isSomethingSelected(){
+    return this.selection.selected.length>0
   }
 
 }

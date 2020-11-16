@@ -12,6 +12,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 export class AcceptcoinsService {
   URL = 'http://localhost:8080';
   TOTAL = 0;
+  public inserted: number;
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
@@ -20,11 +21,8 @@ export class AcceptcoinsService {
   
 
   accept(coin : Coin): Observable<Coin>{
-    // this.coinSource.next(coin)
-    this.TOTAL += +coin
-  
-    console.log("Vending Machine Total : " + this.TOTAL)
     console.log("Coin : " + JSON.stringify(coin))
+    this.inserted = coin.coin
     return this.http.post<Coin>(this.URL + '/accept', coin, this.httpOptions).pipe(
       tap((newCoin: Coin)=> console.log(`inserted coin ${coin}`)),
       catchError(this.handleError<Coin>())
@@ -46,7 +44,7 @@ export class AcceptcoinsService {
     );
   }
     // GET vending machine item by id. Return `undefined` when id is not found 
-    getHeroNo404<Data>(id: number): Observable<Items> {
+    getHeroNo404(id: number): Observable<Items> {
       const url = `${this.URL}/?id=${id}`;
       return this.http.get<Items[]>(url).pipe(
         map((items) => items[0]), // returns a {0|1} element array
@@ -80,8 +78,4 @@ export class AcceptcoinsService {
       return of(result as T);
     };
   }
-  // private log(item: Items){
-  //   this.itemsService.add(item)
-  // }
-
 }

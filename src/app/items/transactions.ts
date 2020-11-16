@@ -2,5 +2,5 @@
 export interface Transaction {
     Name?: string;
     Price? : number;
-    remaining: number;
+    Remaining: number;
   }

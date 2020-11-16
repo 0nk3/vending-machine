@@ -37,7 +37,7 @@ func main() {
 	router.Use(cors.Default())
 	router.POST("/accept", GetCoin)
 	router.GET("/items", GetItems)
-	router.GET("/update", Update)
+	router.PUT("/update", Update)
 	router.Run()
 }
 

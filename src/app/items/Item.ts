@@ -1,7 +1,9 @@
+import { RowContext } from '@angular/cdk/table';
+
 // Definition of an item
 export interface Items{
-    position: number;
-    name: string;
-    price : number;
-    remaining: number;
+    Position: number;
+    Name: string;
+    Price : number;
+    Remaining: number;
   }

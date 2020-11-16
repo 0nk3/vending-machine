@@ -32,10 +32,9 @@ export class OptionsComponent implements OnInit{
    * You have no change
    * Money shortage
    */
-  dispenseItems(): void {
-    
+  dispenseItems(position: number): void {
+    this.acceptService.updateStock(position)
   }
-
   submitted = false;
   coin: Coin = {...this.originalCoin};
 
@@ -56,7 +55,14 @@ export class OptionsComponent implements OnInit{
       (data) => console.log("Success", data),
       (error) => console.log("Error", error)
     );
-    
+
+  }
+  change(coin: Coin){
+
+    // let oneRand = this.coin.coin/this.coinList[0]
+    // let twoRand = this.coin.coin/this.coinList[1]
+    // let fiveRand = this.coin.coin/ this.coinList[2]
+    // let tenRand = this.coin.coin/ this.coinList[3]
   }
   ///try out behav
   ngOnInit(): void {} 
