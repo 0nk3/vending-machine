@@ -37,7 +37,7 @@ func main() {
 	router.Use(cors.Default())
 	router.POST("/accept", GetCoin)
 	router.GET("/items", GetItems)
-	router.GET("/update/:id", Update)
+	router.GET("/update", Update)
 	router.Run()
 }
 
@@ -92,33 +92,44 @@ func Update(c *gin.Context) {
 		panic(error)
 	}
 	defer database.Close()
-	// sqlStatement := "SELECT items SET remaining = ? WHERE position = ?"
-	// update, error := database.Prepare(sqlStatement)
-	// if error != nil {
-	// 	panic(error)
-	// }
+	// Query the DB
+	rows, error := database.Query("SELECT * FROM items")
+	if error != nil {
+		panic(error)
+	}
+	defer rows.Close()
 	sqlStatement := `UPDATE items SET remaining = $2 WHERE position = $1;`
 
-	// item, error := strconv.ParseInt(c.Params.ByName(position), 0, 64)
-	// item := GetPathInt(c*gin.Context, c.Params.ByName("position"))
-	item := c.Query("position")
-	i, error := GetPathInt(c, item)
-
-	reduce := i - 1
-	_, error = database.Exec(sqlStatement, i, reduce)
+	position := c.Query("position")
+	i, error := GetPathInt(c, position)
+	updated := 0
+	for rows.Next() {
+		item := Item{}
+		error := rows.Scan(&item.Position, &item.Name, &item.Price, &item.Remaining) // order matters
+		if error != nil {
+			panic(error)
+		}
+		if item.Position == i {
+			updated = item.Remaining - 1
+		}
+	}
+	log.Println("updated :", updated)
+	_, error = database.Exec(sqlStatement, i, updated)
 	if error != nil {
 		panic(error)
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"remaining": item,
+		"remaining": updated,
 	})
 }
 
 // GetPathInt Helper
-func GetPathInt(c *gin.Context, name string) (int, error) {
-	val := c.Params.ByName(name)
+func GetPathInt(c *gin.Context, position string) (int, error) {
+	// log.Println("name ", position)
+	val := c.Query("position")
+	log.Println("val", position)
 	if val == "" {
-		return 0, errors.New(name + " path parameter value is empty or not specified")
+		return 0, errors.New(position + " path parameter value is empty or not specified")
 	}
 	return strconv.Atoi(val)
 }

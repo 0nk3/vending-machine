@@ -39,7 +39,7 @@ export class AcceptcoinsService {
   }
   // TODO Reduce stock items after sale
   updateStock(position: number):Observable<Items>{
-    return this.http.put<Items>(`${this.URL}/update/${position}`, this.httpOptions).pipe(
+    return this.http.put<Items>(`${this.URL}/update?position=${position}`, this.httpOptions).pipe(
       tap((_) => console.log("items sold and updaated")),
       catchError(this.handleError<any>('updateStock'))
 
@@ -57,7 +57,7 @@ export class AcceptcoinsService {
         catchError(this.handleError<Items>(`getItem id=${id}`))
       );
     }
-  
+
     // GET veding machine item by id. Will 404 if id is not found 
     getItem(id: number): Observable<Items> {
       const url = `${this.URL}/${id}`;
