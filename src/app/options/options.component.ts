@@ -1,3 +1,4 @@
+import { ItemsComponent } from './../items/items.component';
 
 import { Component, OnInit } from '@angular/core';
 import { AcceptcoinsService } from '../acceptcoins.service';
@@ -6,6 +7,7 @@ export interface Coin{
   coin: number;
 }
 @Component({
+  providers: [ItemsComponent],
   selector: 'app-options',
   templateUrl: './options.component.html',
   styleUrls: ['./options.component.css']
@@ -15,7 +17,7 @@ export class OptionsComponent implements OnInit{
   originalCoin: Coin = {
     coin: 0
   };
-  constructor(private acceptService: AcceptcoinsService, ){}
+  constructor(private acceptService: AcceptcoinsService, private itemsComp: ItemsComponent ){}
  
   coinList: number[] = [1,2,5,10];
 
@@ -30,14 +32,15 @@ export class OptionsComponent implements OnInit{
    * You have no change
    * Money shortage
    */
-  dispenseItems(position: number): void {
-    this.acceptService.updateStock(position)
+  dispenseItems(): void {
+    this.itemsComp.checkOut();
   }
+
   submitted = false;
   coin: Coin = {...this.originalCoin};
 
   onInsert(coin : Coin) {
-    coin = coin
+    this.coin = coin
     if(!coin){
       return;
     }
@@ -46,10 +49,12 @@ export class OptionsComponent implements OnInit{
       this.submitted = true
     }
     console.log(" Input<from options> : " + this.coin)
-    this.acceptService.accept(coin as Coin).subscribe(
+
+    this.acceptService.accept(this.coin).subscribe(
       (data) => console.log("Success", data),
       (error) => console.log("Error", error)
     );
+    this
   }
   ngOnInit(): void {} 
 }

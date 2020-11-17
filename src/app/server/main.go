@@ -41,7 +41,7 @@ func main() {
 	router.Run()
 }
 
-// GetCoin . . .
+// GetCoin from the FE . . .
 func GetCoin(c *gin.Context) {
 	body := c.Request.Body
 	money := make([]Coin, 0)
@@ -52,7 +52,7 @@ func GetCoin(c *gin.Context) {
 	coin := Coin{}
 	money = append(money, coin)
 	log.Println("Coin Received : " + string(value))
-	c.JSON(http.StatusOK, money)
+	c.JSON(http.StatusOK, string(value))
 }
 
 // GetItems . .

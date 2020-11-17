@@ -11,7 +11,8 @@ import { Observable, of } from 'rxjs';
 export class AcceptcoinsService {
   URL = 'http://localhost:8080';
   TOTAL = 0;
-  public inserted: number;
+  public change = 0;
+  inserted : Coin
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
@@ -20,27 +21,30 @@ export class AcceptcoinsService {
   
 
   accept(coin : Coin): Observable<Coin>{
-    console.log("Coin : " + JSON.stringify(coin))
-    this.inserted = coin.coin
+    this.inserted = coin;
+    // console.log("inserted update ?" + this.inserted)
     return this.http.post<Coin>(this.URL + '/accept', coin, this.httpOptions).pipe(
-      tap((newCoin: Coin)=> console.log(`inserted coin ${coin}`)),
+      tap((_)=> console.log(`inserted coin ${coin}`)),
       catchError(this.handleError<Coin>())
     )
   }
-  // GET items data from the server 
+
+  // GET items data 
   getItems(): Observable<Items[]>{
     return this.http.get<Items[]>(this.URL + '/items').pipe(
       tap((d) => console.log("Data  Received : \n" + JSON.stringify(d))),
       catchError(this.handleError<Items[]>('get items', []))
     )
   }
+
   // TODO Reduce stock items after sale
   updateStock(position: number):Observable<Items>{
     return this.http.put<Items>(`${this.URL}/update?position=${position}`, this.httpOptions).pipe(
-      tap((_) => console.log("items sold and updaated")),
+      tap((_) => console.log("items sold and updaated . . . ")),
       catchError(this.handleError<any>('updateStock'))
     );
   }
+
     // GET vending machine item by position. Return `undefined` when position is not found 
     getHeroNo404(position: number): Observable<Items> {
       const url = `${this.URL}/?position=${position}`;
@@ -53,11 +57,14 @@ export class AcceptcoinsService {
         catchError(this.handleError<Items>(`getItem position=${position}`))
       );
     }
-    // GET veding machine item by position. Will 404 if position is not found 
+    // GET veding machine item by position and compute change. Will 404 if position is not found 
     getItem(position: number): Observable<Items> {
       const url = `${this.URL}/${position}`;
       return this.http.get<Items>(url).pipe(
-        tap((_) => console.log(`fetched item position=${position}`)),
+        tap((item) => {
+          this.inserted.coin < item.Price ? this.change = this.inserted.coin : this.change = this.inserted.coin - item.Price,
+          console.log("Change : " ,this.change)
+        }),
         catchError(this.handleError<Items>(`getItem position=${position}`))
       );
     }

@@ -13,9 +13,10 @@ import { AcceptcoinsService } from '../acceptcoins.service';
 })
 export class ItemsComponent implements OnInit {
   
-  change = 0
   totalCost = 0;
   coin: Coin; 
+
+  cart = new Set();
   items: Transaction[];
   ITEMS_DATA: Items[]
   dataSource  = new MatTableDataSource();
@@ -31,7 +32,7 @@ export class ItemsComponent implements OnInit {
     private acceptcoinsService: AcceptcoinsService  )
     { }
 
-    // Retrive Data From the server
+    // Retrive Data
   ngOnInit(): void {
     this.acceptcoinsService.getItems().subscribe(item => {
       this.dataSource.data = item
@@ -42,11 +43,19 @@ export class ItemsComponent implements OnInit {
   selection = new SelectionModel<Items>(true, []);
   allSelectedItems(): boolean{
     const selectedItems = this.selection.selected.length;
-    console.log("Selected : ", this.selection.selected)
+    //I wanna keep track of items selected(state)
+    for (let item of this.selection.selected) {
+      this.cart.add(item)
+    }
+    // this.cart = this.selection.selected
+    // console.log("Zeroth element : " + this.selection.selected[0].Position)
     const numberOfRows = this.dataSource.data.length;
-
+    console.log("Selected : ", this.cart)
+    // console.log("Selected Items via personal Set : " +  this.cart)
     return selectedItems === numberOfRows;
   }
+
+  
 
   //Select all rows if they are not all selected; otherwise
   masterToggle(row? : any){
@@ -66,21 +75,10 @@ export class ItemsComponent implements OnInit {
   getTotalCost():number {
     return this.items.map( t => t.Price).reduce((total, price) => total + price, 0)
   }
-  // Compute change
-  checkOut(): number{
-    this.selection.selected.map(p => {
-      if(p.Price > this.coin.coin){
-        this.change = this.coin.coin 
-        console.log("Change : " + this.change) // insufficient funds, return money back
-      }else{
-        this.acceptcoinsService.updateStock(p.Position)
-        this.change =  this.coin.coin - p.Price
-        console.log("Change : " + this.change)
-      }
-    })
-    return this.change;
-  }
-  isSomethingSelected(){
-    return this.selection.selected.length>0
+
+  checkOut() {
+    console.log("Size of the cart : =========================> " + this.cart.size)
+    this.acceptcoinsService.getItem(this.cart[0].Position)
+    // this.acceptcoinsService.updateStock(this.cart[0].Position) 
   }
 }
