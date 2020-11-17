@@ -1,10 +1,9 @@
-import { ItemsService } from './items.service';
 import { Items } from './items/Item';
 import { Coin } from './options/options.component';
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http'
-import { Observable, of, BehaviorSubject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -40,31 +39,28 @@ export class AcceptcoinsService {
     return this.http.put<Items>(`${this.URL}/update?position=${position}`, this.httpOptions).pipe(
       tap((_) => console.log("items sold and updaated")),
       catchError(this.handleError<any>('updateStock'))
-
     );
   }
-    // GET vending machine item by id. Return `undefined` when id is not found 
-    getHeroNo404(id: number): Observable<Items> {
-      const url = `${this.URL}/?id=${id}`;
+    // GET vending machine item by position. Return `undefined` when position is not found 
+    getHeroNo404(position: number): Observable<Items> {
+      const url = `${this.URL}/?position=${position}`;
       return this.http.get<Items[]>(url).pipe(
         map((items) => items[0]), // returns a {0|1} element array
         tap((h) => {
           const outcome = h ? `fetched` : `did not find`;
-          console.log(`${outcome} item id=${id}`);
+          console.log(`${outcome} item position=${position}`);
         }),
-        catchError(this.handleError<Items>(`getItem id=${id}`))
+        catchError(this.handleError<Items>(`getItem position=${position}`))
       );
     }
-
-    // GET veding machine item by id. Will 404 if id is not found 
-    getItem(id: number): Observable<Items> {
-      const url = `${this.URL}/${id}`;
+    // GET veding machine item by position. Will 404 if position is not found 
+    getItem(position: number): Observable<Items> {
+      const url = `${this.URL}/${position}`;
       return this.http.get<Items>(url).pipe(
-        tap((_) => console.log(`fetched item id=${id}`)),
-        catchError(this.handleError<Items>(`getItem id=${id}`))
+        tap((_) => console.log(`fetched item position=${position}`)),
+        catchError(this.handleError<Items>(`getItem position=${position}`))
       );
     }
-
    /**
    * Handle Http operation that failed.
    * Let the app continue.

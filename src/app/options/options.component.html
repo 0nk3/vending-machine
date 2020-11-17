@@ -5,11 +5,7 @@
         <input matInput #coin placeholder="Insert Coin"  pattern="(1|2|5|10)" name="coin" required/>
       </label>
     </mat-form-field>
-    <button mat-raised-button #coin (click)="onInsert(coin.value); coin.value=''; " [disabled]="submitted">Insert</button>
-    <button mat-raised-button  [disabled]="!submitted" onclick="window.location.reload();">Dispense </button>
+    <button mat-raised-button #coin (click)="onInsert(coin.value); coin.value=''; " [disabled]="coin.invalid">Insert</button>
+    <button mat-raised-button  [disabled]="submitted"  onclick="window.location.reload();">Dispense </button>
   </div>
 </form>
-<!-- <div *ngIf="!submitted" class="alert">
-  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-  Thank You!. You information has been submitted.
-</div> -->

@@ -1,12 +1,10 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Transaction } from './transactions';
 import { Items } from './Item';
-import {ChangeDetectorRef} from '@angular/core'
 import { Coin } from '../options/options.component';
 import { AcceptcoinsService } from '../acceptcoins.service';
-
 
 @Component({
   selector: 'app-items',
@@ -15,11 +13,9 @@ import { AcceptcoinsService } from '../acceptcoins.service';
 })
 export class ItemsComponent implements OnInit {
   
-  stock = 0;
   change = 0
   totalCost = 0;
-  coin: Coin;
-  cartTotal = new Set();  
+  coin: Coin; 
   items: Transaction[];
   ITEMS_DATA: Items[]
   dataSource  = new MatTableDataSource();
@@ -31,16 +27,15 @@ export class ItemsComponent implements OnInit {
     "remaining"
   ];
  
-
   constructor(
-    private ref : ChangeDetectorRef, private acceptcoinsService: AcceptcoinsService
-    ){ }
+    private acceptcoinsService: AcceptcoinsService  )
+    { }
+
     // Retrive Data From the server
   ngOnInit(): void {
     this.acceptcoinsService.getItems().subscribe(item => {
       this.dataSource.data = item
     })
-
   }
 
     // all items currently selected 
@@ -49,7 +44,7 @@ export class ItemsComponent implements OnInit {
     const selectedItems = this.selection.selected.length;
     console.log("Selected : ", this.selection.selected)
     const numberOfRows = this.dataSource.data.length;
-  
+
     return selectedItems === numberOfRows;
   }
 
@@ -64,7 +59,6 @@ export class ItemsComponent implements OnInit {
     if(!row){
       return `${this.allSelectedItems()? 'select': 'deselect'} all`;
     }else{
-  
       return `${this.selection.isSelected(row)? 'deselect': 'select'} row ${row.Position + 1}`;
     }
   }
@@ -76,9 +70,12 @@ export class ItemsComponent implements OnInit {
   checkOut(): number{
     this.selection.selected.map(p => {
       if(p.Price > this.coin.coin){
-        this.change = this.coin.coin  // insufficient funds, return money back
+        this.change = this.coin.coin 
+        console.log("Change : " + this.change) // insufficient funds, return money back
       }else{
+        this.acceptcoinsService.updateStock(p.Position)
         this.change =  this.coin.coin - p.Price
+        console.log("Change : " + this.change)
       }
     })
     return this.change;
@@ -86,5 +83,4 @@ export class ItemsComponent implements OnInit {
   isSomethingSelected(){
     return this.selection.selected.length>0
   }
-
 }

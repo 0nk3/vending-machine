@@ -17,8 +17,6 @@ export class OptionsComponent implements OnInit{
   };
   constructor(private acceptService: AcceptcoinsService, ){}
  
-  
-
   coinList: number[] = [1,2,5,10];
 
   // compute the total cost of the selected items
@@ -44,26 +42,14 @@ export class OptionsComponent implements OnInit{
       return;
     }
     this.coin = coin;
-    this.coinList.forEach(element => {
-    if(element === this.coin.coin){
+    if(this.coin.coin in this.coinList){
       this.submitted = true
-      }
-    });
-    this.submitted = true;
+    }
     console.log(" Input<from options> : " + this.coin)
     this.acceptService.accept(coin as Coin).subscribe(
       (data) => console.log("Success", data),
       (error) => console.log("Error", error)
     );
-
   }
-  change(coin: Coin){
-
-    // let oneRand = this.coin.coin/this.coinList[0]
-    // let twoRand = this.coin.coin/this.coinList[1]
-    // let fiveRand = this.coin.coin/ this.coinList[2]
-    // let tenRand = this.coin.coin/ this.coinList[3]
-  }
-  ///try out behav
   ngOnInit(): void {} 
 }
