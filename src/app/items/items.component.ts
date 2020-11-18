@@ -1,10 +1,11 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Transaction } from './transactions';
 import { Items } from './Item';
 import { Coin } from '../options/options.component';
 import { AcceptcoinsService } from '../acceptcoins.service';
+
 
 @Component({
   selector: 'app-items',
@@ -15,8 +16,7 @@ export class ItemsComponent implements OnInit {
   
   totalCost = 0;
   coin: Coin; 
-
-  cart = new Set();
+  cartArr
   items: Transaction[];
   ITEMS_DATA: Items[]
   dataSource  = new MatTableDataSource();
@@ -29,8 +29,8 @@ export class ItemsComponent implements OnInit {
   ];
  
   constructor(
-    private acceptcoinsService: AcceptcoinsService  )
-    { }
+    private acceptcoinsService: AcceptcoinsService  
+    ) { }
 
     // Retrive Data
   ngOnInit(): void {
@@ -39,23 +39,20 @@ export class ItemsComponent implements OnInit {
     })
   }
 
-    // all items currently selected 
+  public cart = new Set();
   selection = new SelectionModel<Items>(true, []);
   allSelectedItems(): boolean{
     const selectedItems = this.selection.selected.length;
+    const numberOfRows = this.dataSource.data.length;
     //I wanna keep track of items selected(state)
     for (let item of this.selection.selected) {
-      this.cart.add(item)
+        console.log("item :  " + item.Name)
+        this.cart.add(item)
     }
-    // this.cart = this.selection.selected
-    // console.log("Zeroth element : " + this.selection.selected[0].Position)
-    const numberOfRows = this.dataSource.data.length;
-    console.log("Selected : ", this.cart)
-    // console.log("Selected Items via personal Set : " +  this.cart)
+    this.acceptcoinsService.shareData = this.cart // sharing data via a service
+    console.log("Selected : ", this.selection.selected )
     return selectedItems === numberOfRows;
   }
-
-  
 
   //Select all rows if they are not all selected; otherwise
   masterToggle(row? : any){
@@ -77,8 +74,13 @@ export class ItemsComponent implements OnInit {
   }
 
   checkOut() {
-    console.log("Size of the cart : =========================> " + this.cart.size)
-    this.acceptcoinsService.getItem(this.cart[0].Position)
-    // this.acceptcoinsService.updateStock(this.cart[0].Position) 
+    console.log("Cart Size : " + this.acceptcoinsService.shareData.size)
+    this.cartArr = Array.from(this.acceptcoinsService.shareData)
+    this.acceptcoinsService.getItem(this.cartArr[0].Position).subscribe((up) => {
+      console.log("fetched  " + up)
+    })
+    this.acceptcoinsService.updateStock(this.cartArr[0].Position).subscribe( (up) => {
+      console.log("update " + up)
+    })
   }
 }

@@ -6,6 +6,6 @@
       </label>
     </mat-form-field>
     <button mat-raised-button #coin (click)="onInsert(coin.value);coin.value='';" [disabled]="coin.invalid">Insert</button>
-    <button mat-raised-button  [disabled]="submitted"  onclick="window.location.reload(); dispenseItems()">Dispense </button>
+    <button mat-raised-button  [disabled]="submitted" (click)="dispenseItems()"  onclick="window.location.reload()">Dispense </button>
   </div>
 </form>

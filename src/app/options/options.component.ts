@@ -13,13 +13,13 @@ export interface Coin{
   styleUrls: ['./options.component.css']
 })
 export class OptionsComponent implements OnInit{
-
   originalCoin: Coin = {
     coin: 0
   };
   constructor(private acceptService: AcceptcoinsService, private itemsComp: ItemsComponent ){}
- 
+  ngOnInit(): void { }
   coinList: number[] = [1,2,5,10];
+  cartArr;
 
   // compute the total cost of the selected items
   getCoins(coin : Coin):number{
@@ -33,9 +33,14 @@ export class OptionsComponent implements OnInit{
    * Money shortage
    */
   dispenseItems(): void {
-    this.itemsComp.checkOut();
-  }
+    console.log("Inside dispense  items ?: " + this.acceptService.shareData.size )
+    this.cartArr = Array.from(this.acceptService.shareData)
+    console.log("Iems : " + this.cartArr )
+    // this.acceptService.getItem(this.cartArr[0].Position)
+    // this.acceptService.updateStock(this.cartArr[0].Position)
+    this.itemsComp.checkOut()
 
+  }
   submitted = false;
   coin: Coin = {...this.originalCoin};
 
@@ -48,13 +53,9 @@ export class OptionsComponent implements OnInit{
     if(this.coin.coin in this.coinList){
       this.submitted = true
     }
-    console.log(" Input<from options> : " + this.coin)
-
     this.acceptService.accept(this.coin).subscribe(
-      (data) => console.log("Success", data),
+      (_) => console.log("Success"),
       (error) => console.log("Error", error)
     );
-    this
   }
-  ngOnInit(): void {} 
 }

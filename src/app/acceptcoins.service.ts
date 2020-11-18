@@ -13,6 +13,7 @@ export class AcceptcoinsService {
   TOTAL = 0;
   public change = 0;
   inserted : Coin
+  shareData = new Set();
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
@@ -24,7 +25,7 @@ export class AcceptcoinsService {
     this.inserted = coin;
     // console.log("inserted update ?" + this.inserted)
     return this.http.post<Coin>(this.URL + '/accept', coin, this.httpOptions).pipe(
-      tap((_)=> console.log(`inserted coin ${coin}`)),
+      tap((_)=> console.log(`Inserted Coin ${coin}`)),
       catchError(this.handleError<Coin>())
     )
   }
@@ -40,7 +41,7 @@ export class AcceptcoinsService {
   // TODO Reduce stock items after sale
   updateStock(position: number):Observable<Items>{
     return this.http.put<Items>(`${this.URL}/update?position=${position}`, this.httpOptions).pipe(
-      tap((_) => console.log("items sold and updaated . . . ")),
+      tap((_) => console.log("items sold and updated . . . ")),
       catchError(this.handleError<any>('updateStock'))
     );
   }
