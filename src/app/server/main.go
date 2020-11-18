@@ -57,7 +57,7 @@ func GetCoin(c *gin.Context) {
 
 // GetItems . .
 func GetItems(c *gin.Context) {
-	fmt.Println("<================ MyPostGres database ==============>")
+	fmt.Println("<================||================||==============||=================>")
 	database, error := sql.Open("postgres", "postgres://onke:onke10222@localhost/vending_machine?sslmode=disable")
 	if error = database.Ping(); error != nil {
 		panic(error)

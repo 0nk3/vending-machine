@@ -53,7 +53,6 @@ export class ItemsComponent implements OnInit {
     console.log("Selected : ", this.selection.selected )
     return selectedItems === numberOfRows;
   }
-
   //Select all rows if they are not all selected; otherwise
   masterToggle(row? : any){
     this.allSelectedItems()?

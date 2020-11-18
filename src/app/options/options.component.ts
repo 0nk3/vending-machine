@@ -20,6 +20,7 @@ export class OptionsComponent implements OnInit{
   ngOnInit(): void { }
   coinList: number[] = [1,2,5,10];
   cartArr;
+  TOTAL = 0;
 
   // compute the total cost of the selected items
   getCoins(coin : Coin):number{
@@ -35,10 +36,10 @@ export class OptionsComponent implements OnInit{
   dispenseItems(): void {
     console.log("Inside dispense  items ?: " + this.acceptService.shareData.size )
     this.cartArr = Array.from(this.acceptService.shareData)
-    console.log("Iems : " + this.cartArr )
-    // this.acceptService.getItem(this.cartArr[0].Position)
-    // this.acceptService.updateStock(this.cartArr[0].Position)
     this.itemsComp.checkOut()
+    
+    // this.acceptService.shareData
+    
 
   }
   submitted = false;
