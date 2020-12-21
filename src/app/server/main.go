@@ -86,7 +86,7 @@ func GetItems(c *gin.Context) {
 
 // Update . . .
 func Update(c *gin.Context) {
-	//TODO this should all be improved to avoid coid duplication
+	//TODO this should all be improved to avoid code duplication
 	database, error := sql.Open("postgres", "postgres://onke:onke10222@localhost/vending_machine?sslmode=disable")
 	if error = database.Ping(); error != nil {
 		panic(error)

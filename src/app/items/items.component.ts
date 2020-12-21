@@ -69,7 +69,8 @@ export class ItemsComponent implements OnInit {
   }
   // Total Cost of the Selected Items
   getTotalCost():number {
-    return this.items.map( t => t.Price).reduce((total, price) => total + price, 0)
+    //
+    return 0; //this.items.map( t => t.Price).reduce((total, price) => total + price, 0)
   }
 
   checkOut() {
