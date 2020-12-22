@@ -72,11 +72,10 @@ export class ItemsComponent implements OnInit {
     this.selection.selected.forEach(element => {
       cost += element.Price;
     });
-    console.log("Cost : " + cost)
+    console.log(`Cost : R${cost}`)
     console.log(`Inserted Coin : ${this.acceptcoinsService.inserted}`)
-    // console.log("Inserted Coin type: " + typeof this.acceptcoinsService.inserted)
     diff = (<any>this.acceptcoinsService.inserted - cost) as number;
-    console.log("Diff : " + diff)
+    console.log(`Change : ${diff}`)
     this.computeChange(diff)
     return cost ;
   }
@@ -87,12 +86,12 @@ export class ItemsComponent implements OnInit {
       console.log(`fetched  ${up}`)
     })
     this.acceptcoinsService.updateStock(this.cartArr[0].Position).subscribe( (up) => {
-      console.log("update " + up)
+      console.log(`update ${up}`)
     })
   }
   computeChange(money: number){
-    this.change = money;
-    let onerand: number, tworand: number,fiverand: number, tenrand:number;
+  this.change = money;
+  let onerand: number = 0, tworand: number = 0 ,fiverand: number = 0 , tenrand:number = 0;
 
   tenrand = this.change/10
   this.change = this.change%10;
@@ -104,7 +103,10 @@ export class ItemsComponent implements OnInit {
   this.change = this.change%2;
 
   onerand = this.change;
-    
-    console.log("R10 : " + Math.floor(tenrand) + "\nR5 : " + fiverand + "\nR2 : " + tworand  + "\nR1 :" + onerand  );
+  console.log(`
+  	R10 : ${Math.floor(tenrand)}
+	R5 : ${fiverand}
+	R2 : ${tworand}
+	R1 :${onerand}`);
   }
 }
