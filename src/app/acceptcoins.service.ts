@@ -19,13 +19,10 @@ export class AcceptcoinsService {
   };
 
   constructor(private http: HttpClient) { }
-  
-
   accept(coin : Coin): Observable<Coin>{
     this.inserted = coin;
-    // console.log("inserted update ?" + this.inserted)
     return this.http.post<Coin>(this.URL + '/accept', coin, this.httpOptions).pipe(
-      tap((_)=> console.log(`Inserted Coin ${coin}`)),
+      tap((_)=> this.inserted = coin),
       catchError(this.handleError<Coin>())
     )
   }
@@ -38,14 +35,12 @@ export class AcceptcoinsService {
     )
   }
 
-  // TODO Reduce stock items after sale
   updateStock(position: number):Observable<Items>{
     return this.http.put<Items>(`${this.URL}/update?position=${position}`, this.httpOptions).pipe(
       tap((_) => console.log("items sold and updated . . . ")),
       catchError(this.handleError<any>('updateStock'))
     );
   }
-
     // GET vending machine item by position. Return `undefined` when position is not found 
     getHeroNo404(position: number): Observable<Items> {
       const url = `${this.URL}/?position=${position}`;

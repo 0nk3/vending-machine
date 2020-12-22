@@ -36,11 +36,8 @@ export class OptionsComponent implements OnInit{
   dispenseItems(): void {
     console.log("Inside dispense  items ?: " + this.acceptService.shareData.size )
     this.cartArr = Array.from(this.acceptService.shareData)
+    this.itemsComp.computeChange(this.coin.coin);
     this.itemsComp.checkOut()
-    
-    // this.acceptService.shareData
-    
-
   }
   submitted = false;
   coin: Coin = {...this.originalCoin};

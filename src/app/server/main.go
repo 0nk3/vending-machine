@@ -52,6 +52,7 @@ func GetCoin(c *gin.Context) {
 	coin := Coin{}
 	money = append(money, coin)
 	log.Println("Coin Received : " + string(value))
+
 	c.JSON(http.StatusOK, string(value))
 }
 
@@ -123,7 +124,7 @@ func Update(c *gin.Context) {
 	})
 }
 
-// GetPathInt Helper
+// GetPathInt Helper function
 func GetPathInt(c *gin.Context, position string) (int, error) {
 	// log.Println("name ", position)
 	val := c.Query("position")

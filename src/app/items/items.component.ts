@@ -13,8 +13,7 @@ import { AcceptcoinsService } from '../acceptcoins.service';
   styleUrls: ['./items.component.css']
 })
 export class ItemsComponent implements OnInit {
-  
-  totalCost = 0;
+  change: number = 0;
   coin: Coin; 
   cartArr
   items: Transaction[];
@@ -38,13 +37,12 @@ export class ItemsComponent implements OnInit {
       this.dataSource.data = item
     })
   }
-
   public cart = new Set();
   selection = new SelectionModel<Items>(true, []);
   allSelectedItems(): boolean{
     const selectedItems = this.selection.selected.length;
     const numberOfRows = this.dataSource.data.length;
-    //I wanna keep track of items selected(state)
+    //*I wanna keep track of items selected(state)
     for (let item of this.selection.selected) {
         console.log("item :  " + item.Name)
         this.cart.add(item)
@@ -69,18 +67,44 @@ export class ItemsComponent implements OnInit {
   }
   // Total Cost of the Selected Items
   getTotalCost():number {
-    //
-    return 0; //this.items.map( t => t.Price).reduce((total, price) => total + price, 0)
+    let cost = 0;
+    let diff: number;
+    this.selection.selected.forEach(element => {
+      cost += element.Price;
+    });
+    console.log("Cost : " + cost)
+    console.log(`Inserted Coin : ${this.acceptcoinsService.inserted}`)
+    // console.log("Inserted Coin type: " + typeof this.acceptcoinsService.inserted)
+    diff = (<any>this.acceptcoinsService.inserted - cost) as number;
+    console.log("Diff : " + diff)
+    this.computeChange(diff)
+    return cost ;
   }
-
   checkOut() {
-    console.log("Cart Size : " + this.acceptcoinsService.shareData.size)
+    console.log(`Cart Size : ${this.acceptcoinsService.shareData.size}`)
     this.cartArr = Array.from(this.acceptcoinsService.shareData)
     this.acceptcoinsService.getItem(this.cartArr[0].Position).subscribe((up) => {
-      console.log("fetched  " + up)
+      console.log(`fetched  ${up}`)
     })
     this.acceptcoinsService.updateStock(this.cartArr[0].Position).subscribe( (up) => {
       console.log("update " + up)
     })
+  }
+  computeChange(money: number){
+    this.change = money;
+    let onerand: number, tworand: number,fiverand: number, tenrand:number;
+
+  tenrand = this.change/10
+  this.change = this.change%10;
+
+  fiverand = this.change/5;
+  this.change = this.change%5;
+
+  tworand = this.change/2;
+  this.change = this.change%2;
+
+  onerand = this.change;
+    
+    console.log("R10 : " + Math.floor(tenrand) + "\nR5 : " + fiverand + "\nR2 : " + tworand  + "\nR1 :" + onerand  );
   }
 }
