@@ -89,6 +89,7 @@ export class ItemsComponent implements OnInit {
       console.log(`update ${up}`)
     })
   }
+  //* Compute change and return as coin/note divisions of 1,2,5,10.
   computeChange(money: number){
   this.change = money;
   let onerand: number = 0, tworand: number = 0 ,fiverand: number = 0 , tenrand:number = 0;
